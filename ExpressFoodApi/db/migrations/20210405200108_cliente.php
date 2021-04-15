@@ -47,6 +47,7 @@ class Cliente extends AbstractMigration
             'limit' => 11,
             'null' => false,
         ]);
+        //retirar da tabela
         $table->addColumn('email', 'string', [
             'default' => null,
             'limit' => 100,
@@ -62,11 +63,11 @@ class Cliente extends AbstractMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addColumn('data_criação', 'timestamp', [
+        $table->addColumn('data_criacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => false,
         ]);
-        $table->addColumn('data_modificação', 'timestamp', [
+        $table->addColumn('data_modificacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => true,
         ]);

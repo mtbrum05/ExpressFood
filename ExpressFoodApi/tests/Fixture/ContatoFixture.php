@@ -25,8 +25,8 @@ class ContatoFixture extends TestFixture
     public $fields = [
         'codigo' => ['type' => 'integer', 'length' => null, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
         'descricao' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null],
-        'data_criação' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => false, 'default' => 'current_timestamp()', 'comment' => ''],
-        'data_modificação' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => true, 'default' => 'current_timestamp()', 'comment' => ''],
+        'data_criacao' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => false, 'default' => 'current_timestamp()', 'comment' => ''],
+        'data_modificacao' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => true, 'default' => 'current_timestamp()', 'comment' => ''],
         'ativo' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '1', 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['codigo'], 'length' => []],
@@ -47,10 +47,18 @@ class ContatoFixture extends TestFixture
         $this->records = [
             [
                 'codigo' => 1,
-                'descricao' => 'Lorem ipsum dolor sit amet',
-                'data_criação' => 1618083397,
-                'data_modificação' => 1618083397,
+                'descricao' => 'Telefone',
+                'data_criacao' => date('Y-m-d H:i:s'),
+                'data_modificacao' => date('Y-m-d H:i:s'),
                 'ativo' => 1,
+            ],
+            //registro criado para os testes de delete
+            [
+                'codigo' => 2,
+                'descricao' => 'Outros',
+                'data_criacao' => date('Y-m-d H:i:s'),
+                'data_modificacao' => date('Y-m-d H:i:s'),
+                'ativo' => 0,
             ],
         ];
         parent::init();

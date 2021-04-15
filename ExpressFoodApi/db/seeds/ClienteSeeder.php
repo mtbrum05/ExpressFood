@@ -2,6 +2,7 @@
 
 
 use Phinx\Seed\AbstractSeed;
+use Cake\Auth\DefaultPasswordHasher;
 
 class ClienteSeeder extends AbstractSeed
 {
@@ -15,7 +16,7 @@ class ClienteSeeder extends AbstractSeed
             'cpf'       => '78918273037',
             'sexo'      => 'M',
             'email'     => 'mbrum@email.com',
-            'senha'     => md5('123456')
+            'senha'     => password_hash('123456',PASSWORD_DEFAULT)
             ],
             [
                 'nome'      => 'José',
@@ -23,7 +24,7 @@ class ClienteSeeder extends AbstractSeed
                 'cpf'       => '22996775007',
                 'sexo'      => 'M',
                 'email'     => 'jose_brum@email.com',
-                'senha'     => md5('abc1234')
+                'senha'     => password_hash('abc1234',PASSWORD_DEFAULT)
             ],
         ];
 

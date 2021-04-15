@@ -10,8 +10,8 @@ use Cake\ORM\Entity;
  *
  * @property int $codigo
  * @property string $descricao
- * @property \Cake\I18n\FrozenTime $data_criação
- * @property \Cake\I18n\FrozenTime|null $data_modificação
+ * @property \Cake\I18n\FrozenTime $data_criacao
+ * @property \Cake\I18n\FrozenTime|null $data_modificacao
  * @property bool $ativo
  *
  * @property \App\Model\Entity\Cliente[] $cliente
@@ -29,8 +29,8 @@ class Contato extends Entity
      */
     protected $_accessible = [
         'descricao' => true,
-        'data_criação' => true,
-        'data_modificação' => true,
+        'data_criacao' => true,
+        'data_modificacao' => true,
         'ativo' => true,
         'cliente' => true,
     ];

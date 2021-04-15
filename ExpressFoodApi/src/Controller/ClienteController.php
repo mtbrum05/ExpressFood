@@ -3,6 +3,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Exception;
+use Cake\Utility\Security;
+use Cake\Http\Exception\BadRequestException;
+
 /**
  * Cliente Controller
  *
@@ -10,95 +14,82 @@ namespace App\Controller;
  */
 class ClienteController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function index()
-    {
-        $cliente = $this->paginate($this->Cliente);
 
-        $this->set(compact('cliente'));
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->Auth->allow('login');
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Cliente id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $cliente = $this->Cliente->get($id, [
-            'contain' => [],
-        ]);
-
-        $this->set(compact('cliente'));
+    public function login(): void
+     {
+        if ($this->request->is('post')) {
+            $user = $this->Auth->identify();
+            if (!$user) {
+               $this->response = $this->response->withStatus(400);
+                $message[] = 'Usuário ou senha inválidos';
+                $this->set(compact('message'));
+                $this->set('_serialize', ['message']);
+                return;
+            }
+          $this->Auth->setUser($user);
+          $this->set([
+                    'success' => true,
+                    'data' => [
+                        'token' => $token = \Firebase\JWT\JWT::encode([
+                            'nome' => $user['nome'],
+                            'sobrenome' => $user['sobrenome'],
+                            'email' => $user['email'],
+                            'exp' => time() + 3600,
+                                ], Security::getSalt()),
+                    ],
+                    '_serialize' => ['success', 'data'],
+         ]);
+        }
     }
 
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
+
     public function add()
     {
-        $cliente = $this->Cliente->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $cliente = $this->Cliente->patchEntity($cliente, $this->request->getData());
-            if ($this->Cliente->save($cliente)) {
-                $this->Flash->success(__('The cliente has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+
+        $data = $this->request->getData();
+
+        try {
+
+            if ($this->request->is('post')) {
+                $cliente = $this->Cliente->newEntity();
+                $cliente = $this->Cliente->patchEntity($cliente, $data);
+                
+                if ($this->Cliente->save($cliente)) {
+                    $message = 'Salvo com sucesso!';
+                } else {
+                    $message = ['cliente' => $cliente->getErrors()];
+                    throw new BadRequestException(json_encode($message));
+                }
             }
-            $this->Flash->error(__('The cliente could not be saved. Please, try again.'));
+            $this->set([
+                'data' => [
+                    'message' => $message,
+                    'cliente' => $cliente,
+                ],
+                '_serialize' => ['data']
+            ]);
+        } catch (BadRequestException $e) { //400
+            $dados = [
+                "data"      => null,
+                "message" => json_decode($e->getMessage(), true)
+            ];
+
+            return $this->response
+                ->withStatus(400)
+                ->withType('application/json')
+                ->withStringBody(json_encode($dados));
+        } catch (Exception $e) {
+            return $this->ErrorHandler->errorHandler($e, 500);
         }
-        $this->set(compact('cliente'));
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $id Cliente id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $cliente = $this->Cliente->get($id, [
-            'contain' => [],
-        ]);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $cliente = $this->Cliente->patchEntity($cliente, $this->request->getData());
-            if ($this->Cliente->save($cliente)) {
-                $this->Flash->success(__('The cliente has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The cliente could not be saved. Please, try again.'));
-        }
-        $this->set(compact('cliente'));
-    }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $id Cliente id.
-     * @return \Cake\Http\Response|null|void Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete($id = null)
-    {
-        $this->request->allowMethod(['post', 'delete']);
-        $cliente = $this->Cliente->get($id);
-        if ($this->Cliente->delete($cliente)) {
-            $this->Flash->success(__('The cliente has been deleted.'));
-        } else {
-            $this->Flash->error(__('The cliente could not be deleted. Please, try again.'));
-        }
-
-        return $this->redirect(['action' => 'index']);
-    }
+    
 }

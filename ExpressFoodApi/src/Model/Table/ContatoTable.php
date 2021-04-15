@@ -65,17 +65,16 @@ class ContatoTable extends Table
         $validator
             ->scalar('descricao')
             ->maxLength('descricao', 100)
-            ->requirePresence('descricao', 'create', 'A descrição do contato não pode ser vazia.')
-            ->notEmptyString('descricao', 'A descrição do contato não pode ser vazia.');
-
-
-        $validator
-            ->dateTime('data_criação')
-            ->notEmptyDateTime('data_criação');
+            ->requirePresence('descricao', 'create')
+            ->notEmptyString('descricao');
 
         $validator
-            ->dateTime('data_modificação')
-            ->allowEmptyDateTime('data_modificação');
+            ->dateTime('data_criacao')
+            ->notEmptyDateTime('data_criacao');
+
+        $validator
+            ->dateTime('data_modificacao')
+            ->allowEmptyDateTime('data_modificacao');
 
         $validator
             ->boolean('ativo')

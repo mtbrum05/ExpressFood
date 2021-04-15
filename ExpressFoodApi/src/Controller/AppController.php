@@ -49,33 +49,29 @@ class AppController extends Controller
         $this->loadComponent('ErrorHandler', [
             'controller' => $this
         ]);
+
+        $this->loadComponent('Auth', [
+            'storage' => 'Memory',
+            'authenticate' => [
+                 'Form' => [
+                     'userModel' => 'Cliente',
+                     'fields' => [
+                         'username' => 'email',
+                         'password' => 'senha'
+                     ],
+                 ],
+                 'Jwt' => [
+                     'userModel' => 'Cliente',
+                     'queryDatasource' => false,
+                     'fields' => [
+                         'username' => 'email',
+                     ],
+                 ],
+             ],
+             'checkAuthIn' => 'Controller.initialize',
+         ]);
         
 
-        // $this->loadComponent('Auth', [
-        //     'storage' => 'Memory',
-        //     'authenticate' => [
-        //         'Form' => [
-        //             'fields' => [
-        //                 'username' => 'email',
-        //                 'password' => 'senha'
-        //             ],
-        //             'finder' => 'auth'
-        //         ],
-        //         'ADmad/JwtAuth.Jwt' => [
-        //             'scope' => ['Cliente.ativo' => 1],
-        //             'parameter' => '_token',
-        //             'userModel' => 'Cliente',
-        //             'fields' => [
-        //                 'username' => 'email',
-        //             ],
-        //         ],
-        //     ],
-        //     'loginAction' => [
-        //         'controller' => 'Usuarios',
-        //         'action' => 'login'
-        //     ],
-        //     'unauthorizedRedirect' => false,
-        //     'checkAuthIn' => 'Controller.initialize'
-        // ]);
+       
     }
 }

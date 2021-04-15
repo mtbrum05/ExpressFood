@@ -2,11 +2,9 @@
 namespace App\Controller;
 
 use Exception;
-use Cake\ORM\Query;
 use App\Controller\AppController;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Database\Expression\QueryExpression;
 
 /**
  * Contato Controller
@@ -49,8 +47,8 @@ class ContatoController extends AppController
                 'data' => [
                     'contato' => $contato,
                 ],
-                '_serialize' => ['data']
             ]);
+            $this->viewBuilder()->setOption('serialize', true);
         } catch (BadRequestException $e) { //400
 
             $dados = [
@@ -81,12 +79,12 @@ class ContatoController extends AppController
                 'data' => [
                     'contato' => $contato,
                 ],
-                '_serialize' => ['data']
             ]);
+            $this->viewBuilder()->setOption('serialize', true);
+
         } catch (NotFoundException $e) {
             return $this->ErrorHandler->errorHandler($e, 404);
         } catch (Exception $e) {
-
             return $this->ErrorHandler->errorHandler($e, 500);
         }
     }
@@ -100,7 +98,6 @@ class ContatoController extends AppController
         try {
 
             if ($this->request->is('post')) {
-
                 $contato = $this->Contato->newEmptyEntity();
                 $contato = $this->Contato->patchEntity($contato, $data);
                 
@@ -116,8 +113,9 @@ class ContatoController extends AppController
                     'message' => $message,
                     'contato' => $contato,
                 ],
-                '_serialize' => ['data']
             ]);
+            $this->viewBuilder()->setOption('serialize', true);
+
         } catch (BadRequestException $e) { //400
             $dados = [
                 "data"      => null,
@@ -157,8 +155,8 @@ class ContatoController extends AppController
                     'message' => $message,
                     'contato' => $contato,
                 ],
-                '_serialize' => ['data']
             ]);
+            $this->viewBuilder()->setOption('serialize', true);
         } catch (BadRequestException $e) { //400
             $dados = [
                 "data"      => null,
@@ -196,12 +194,12 @@ class ContatoController extends AppController
                 'data' => [
                     'message' => $message,
                 ],
-                '_serialize' => ['data']
             ]);
+            $this->viewBuilder()->setOption('serialize', true);
+
         } catch (NotFoundException $e) {
             return $this->ErrorHandler->errorHandler($e, 404);
         } catch (Exception $e) {
-            debug($e);die;
             if($e->getCode() == 23000){
                 return $this->ErrorHandler->errorHandlerConstraintViolation($e, 400);
             }

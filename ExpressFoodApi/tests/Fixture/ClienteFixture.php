@@ -30,8 +30,8 @@ class ClienteFixture extends TestFixture
         'email' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null],
         'senha' => ['type' => 'string', 'length' => 100, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null],
         'sexo' => ['type' => 'char', 'length' => 1, 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => '', 'precision' => null],
-        'data_criação' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => false, 'default' => 'current_timestamp()', 'comment' => ''],
-        'data_modificação' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => true, 'default' => 'current_timestamp()', 'comment' => ''],
+        'data_criacao' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => false, 'default' => 'current_timestamp()', 'comment' => ''],
+        'data_modificacao' => ['type' => 'timestamp', 'length' => null, 'precision' => null, 'null' => true, 'default' => 'current_timestamp()', 'comment' => ''],
         'ativo' => ['type' => 'boolean', 'length' => null, 'null' => false, 'default' => '1', 'comment' => '', 'precision' => null],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['codigo'], 'length' => []],
@@ -52,14 +52,14 @@ class ClienteFixture extends TestFixture
         $this->records = [
             [
                 'codigo' => 1,
-                'nome' => 'Lorem ipsum dolor sit amet',
-                'sobrenome' => 'Lorem ipsum dolor sit amet',
-                'cpf' => 'Lorem ips',
-                'email' => 'Lorem ipsum dolor sit amet',
-                'senha' => 'Lorem ipsum dolor sit amet',
-                'sexo' => '',
-                'data_criação' => 1618084954,
-                'data_modificação' => 1618084954,
+                'nome' => 'teste',
+                'sobrenome' => 'phpunit',
+                'cpf' => '12345678912',
+                'email' => 'teste@teste.com.br',
+                'senha' => password_hash('123456',PASSWORD_DEFAULT),
+                'sexo' => 'F',
+                'data_criacao' => 1618070769,
+                'data_modificacao' => 1618070769,
                 'ativo' => 1,
             ],
         ];

@@ -37,11 +37,11 @@ class Contato extends AbstractMigration
             'limit' => 100,
             'null' => false,
         ]);
-        $table->addColumn('data_criação', 'timestamp', [
+        $table->addColumn('data_criacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => false,
         ]);
-        $table->addColumn('data_modificação', 'timestamp', [
+        $table->addColumn('data_modificacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => true,
         ]);

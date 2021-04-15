@@ -44,8 +44,8 @@ class ClienteTable extends Table
         $this->setPrimaryKey('codigo');
 
         $this->belongsToMany('Contato', [
-            'foreignKey' => 'cliente_id',
-            'targetForeignKey' => 'contato_id',
+            'foreignKey' => 'codigo',
+            'targetForeignKey' => 'codigo',
             'joinTable' => 'contato_cliente',
         ]);
     }
@@ -98,17 +98,24 @@ class ClienteTable extends Table
             ->notEmptyString('sexo');
 
         $validator
-            ->dateTime('data_criação')
-            ->notEmptyDateTime('data_criação');
+            ->dateTime('data_criacao')
+            ->notEmptyDateTime('data_criacao');
 
         $validator
-            ->dateTime('data_modificação')
-            ->allowEmptyDateTime('data_modificação');
+            ->dateTime('data_modificacao')
+            ->allowEmptyDateTime('data_modificacao');
 
         $validator
             ->boolean('ativo')
             ->notEmptyString('ativo');
 
         return $validator;
+    }
+
+    public function buildRules(RulesChecker $rules) : RulesChecker
+    {
+        $rules->add($rules->isUnique(['email']));
+
+        return $rules;
     }
 }
