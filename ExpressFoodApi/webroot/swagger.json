@@ -25,17 +25,7 @@
                 "parameters": [],
                 "requestBody": {
                     "content": {
-                        "application\/x-www-form-urlencoded": {
-                            "schema": {
-                                "$ref": "#\/x-swagger-bake\/components\/schemas\/Login"
-                            }
-                        },
                         "application\/json": {
-                            "schema": {
-                                "$ref": "#\/x-swagger-bake\/components\/schemas\/Login"
-                            }
-                        },
-                        "application\/xml": {
                             "schema": {
                                 "$ref": "#\/x-swagger-bake\/components\/schemas\/Login"
                             }
@@ -50,18 +40,6 @@
                             "application\/json": {
                                 "schema": {
                                     "$ref": "#\/x-swagger-bake\/components\/schemas\/Cliente-Read"
-                                }
-                            },
-                            "application\/xml": {
-                                "schema": {
-                                    "allOf": [
-                                        {
-                                            "$ref": "#\/x-swagger-bake\/components\/schemas\/Cliente-Read"
-                                        }
-                                    ],
-                                    "xml": {
-                                        "name": "response"
-                                    }
                                 }
                             }
                         }
@@ -1055,12 +1033,14 @@
                         "email": {
                             "type": "string",
                             "format": "email",
-                            "minLength": 1
+                            "minLength": 1,
+                            "example": "mbrum@email.com"
                         },
                         "senha": {
                             "type": "string",
                             "minLength": 1,
-                            "maxLength": 100
+                            "maxLength": 100,
+                            "example": "123456"
                         }                        
                     }
                 },
@@ -1069,11 +1049,10 @@
                     "type": "object",
                     "properties": {
                         "token": {
-                            "type": "integer",
+                            "type": "string",
                             "format": "int64",
                             "readOnly": true
-                        },
-                       
+                        }                       
                     }
                 },
                 "Cliente-Add": {
