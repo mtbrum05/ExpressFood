@@ -43,7 +43,9 @@ class Application extends BaseApplication
      */
     public function bootstrap(): void
     {
-        $this->addPlugin('ADmad/JwtAuth');
+        $this->addPlugin('SwaggerBake');
+
+        $this->addPlugin('SwaggerCustom');
 
         $this->addPlugin('ADmad/JwtAuth');
 
