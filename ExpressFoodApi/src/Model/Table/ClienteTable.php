@@ -75,29 +75,6 @@ class ClienteTable extends Table
             ->notEmptyString('sobrenome');
 
         $validator
-            ->scalar('cpf')
-            ->maxLength('cpf', 11)
-            ->requirePresence('cpf', 'create')
-            ->notEmptyString('cpf');
-
-        $validator
-            ->email('email')
-            ->requirePresence('email', 'create')
-            ->notEmptyString('email');
-
-        $validator
-            ->scalar('senha')
-            ->maxLength('senha', 100)
-            ->requirePresence('senha', 'create')
-            ->notEmptyString('senha');
-
-        $validator
-            ->scalar('sexo')
-            ->maxLength('sexo', 1)
-            ->requirePresence('sexo', 'create')
-            ->notEmptyString('sexo');
-
-        $validator
             ->dateTime('data_criacao')
             ->notEmptyDateTime('data_criacao');
 
@@ -106,16 +83,26 @@ class ClienteTable extends Table
             ->allowEmptyDateTime('data_modificacao');
 
         $validator
+            ->scalar('sexo')
+            ->maxLength('sexo', 1)
+            ->requirePresence('sexo', 'create')
+            ->notEmptyString('sexo');
+
+        $validator
+            ->scalar('cpf')
+            ->maxLength('cpf', 11)
+            ->requirePresence('cpf', 'create')
+            ->notEmptyString('cpf');
+
+        $validator
             ->boolean('ativo')
             ->notEmptyString('ativo');
 
+        $validator
+            ->integer('codigo_usuario')
+            ->requirePresence('codigo_usuario', 'create')
+            ->notEmptyString('codigo_usuario');
+
         return $validator;
-    }
-
-    public function buildRules(RulesChecker $rules) : RulesChecker
-    {
-        $rules->add($rules->isUnique(['email']));
-
-        return $rules;
     }
 }

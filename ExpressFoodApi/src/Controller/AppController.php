@@ -54,17 +54,18 @@ class AppController extends Controller
             'storage' => 'Memory',
             'authenticate' => [
                  'Form' => [
-                     'userModel' => 'Cliente',
+                     'userModel' => 'Usuario',
                      'fields' => [
                          'username' => 'email',
                          'password' => 'senha'
                      ],
                  ],
                  'Jwt' => [
-                     'userModel' => 'Cliente',
+                     'userModel' => 'Usuario',
                      'queryDatasource' => false,
                      'fields' => [
                          'username' => 'email',
+                         'password' => 'senha'
                      ],
                  ],
              ],

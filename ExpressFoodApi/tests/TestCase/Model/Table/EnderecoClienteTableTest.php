@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ContatoTable;
+use App\Model\Table\EnderecoClienteTable;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ContatoTable Test Case
+ * App\Model\Table\EnderecoClienteTable Test Case
  */
-class ContatoTableTest extends TestCase
+class EnderecoClienteTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ContatoTable
+     * @var \App\Model\Table\EnderecoClienteTable
      */
-    protected $Contato;
+    protected $EnderecoCliente;
 
     /**
      * Fixtures
@@ -24,9 +24,7 @@ class ContatoTableTest extends TestCase
      * @var array
      */
     protected $fixtures = [
-        'app.Contato',
-        'app.Cliente',
-        'app.Empresa',
+        'app.EnderecoCliente',
     ];
 
     /**
@@ -37,8 +35,8 @@ class ContatoTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = $this->getTableLocator()->exists('Contato') ? [] : ['className' => ContatoTable::class];
-        $this->Contato = $this->getTableLocator()->get('Contato', $config);
+        $config = $this->getTableLocator()->exists('EnderecoCliente') ? [] : ['className' => EnderecoClienteTable::class];
+        $this->EnderecoCliente = $this->getTableLocator()->get('EnderecoCliente', $config);
     }
 
     /**
@@ -48,7 +46,7 @@ class ContatoTableTest extends TestCase
      */
     public function tearDown(): void
     {
-        unset($this->Contato);
+        unset($this->EnderecoCliente);
 
         parent::tearDown();
     }
@@ -59,16 +57,6 @@ class ContatoTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

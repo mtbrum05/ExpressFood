@@ -11,13 +11,12 @@ use Cake\ORM\Entity;
  * @property int $codigo
  * @property string $nome
  * @property string $sobrenome
- * @property string $cpf
- * @property string $email
- * @property string $senha
- * @property string $sexo
  * @property \Cake\I18n\FrozenTime $data_criacao
  * @property \Cake\I18n\FrozenTime|null $data_modificacao
+ * @property string $sexo
+ * @property string $cpf
  * @property bool $ativo
+ * @property int $codigo_usuario
  *
  * @property \App\Model\Entity\Contato[] $contato
  */
@@ -35,13 +34,12 @@ class Cliente extends Entity
     protected $_accessible = [
         'nome' => true,
         'sobrenome' => true,
-        'cpf' => true,
-        'email' => true,
-        'senha' => true,
-        'sexo' => true,
         'data_criacao' => true,
         'data_modificacao' => true,
+        'sexo' => true,
+        'cpf' => true,
         'ativo' => true,
+        'codigo_usuario' => true,
         'contato' => true,
     ];
 }

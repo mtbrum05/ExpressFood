@@ -15,6 +15,7 @@ use Cake\ORM\Entity;
  * @property bool $ativo
  *
  * @property \App\Model\Entity\Cliente[] $cliente
+ * @property \App\Model\Entity\Empresa[] $empresa
  */
 class Contato extends Entity
 {
@@ -33,5 +34,6 @@ class Contato extends Entity
         'data_modificacao' => true,
         'ativo' => true,
         'cliente' => true,
+        'empresa' => true,
     ];
 }

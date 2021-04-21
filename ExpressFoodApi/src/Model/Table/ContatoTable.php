@@ -12,6 +12,7 @@ use Cake\Validation\Validator;
  * Contato Model
  *
  * @property \App\Model\Table\ClienteTable&\Cake\ORM\Association\BelongsToMany $Cliente
+ * @property \App\Model\Table\EmpresaTable&\Cake\ORM\Association\BelongsToMany $Empresa
  *
  * @method \App\Model\Entity\Contato newEmptyEntity()
  * @method \App\Model\Entity\Contato newEntity(array $data, array $options = [])
@@ -48,6 +49,11 @@ class ContatoTable extends Table
             'targetForeignKey' => 'codigo',
             'joinTable' => 'contato_cliente',
         ]);
+        $this->belongsToMany('Empresa', [
+            'foreignKey' => 'codigo',
+            'targetForeignKey' => 'codigo',
+            'joinTable' => 'contato_empresa',
+        ]);
     }
 
     /**
@@ -66,7 +72,8 @@ class ContatoTable extends Table
             ->scalar('descricao')
             ->maxLength('descricao', 100)
             ->requirePresence('descricao', 'create')
-            ->notEmptyString('descricao');
+            ->notEmptyString('descricao')
+            ->add('descricao', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->dateTime('data_criacao')
@@ -83,9 +90,16 @@ class ContatoTable extends Table
         return $validator;
     }
 
-    public function buildRules(RulesChecker $rules) : RulesChecker
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['descricao'], 'descrição já cadastrada no banco.'));
+        $rules->add($rules->isUnique(['descricao']), ['errorField' => 'descricao']);
 
         return $rules;
     }

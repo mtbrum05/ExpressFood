@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ContatoTable;
+use App\Model\Table\EmpresaTable;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ContatoTable Test Case
+ * App\Model\Table\EmpresaTable Test Case
  */
-class ContatoTableTest extends TestCase
+class EmpresaTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ContatoTable
+     * @var \App\Model\Table\EmpresaTable
      */
-    protected $Contato;
+    protected $Empresa;
 
     /**
      * Fixtures
@@ -24,9 +24,8 @@ class ContatoTableTest extends TestCase
      * @var array
      */
     protected $fixtures = [
-        'app.Contato',
-        'app.Cliente',
         'app.Empresa',
+        'app.Contato',
     ];
 
     /**
@@ -37,8 +36,8 @@ class ContatoTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = $this->getTableLocator()->exists('Contato') ? [] : ['className' => ContatoTable::class];
-        $this->Contato = $this->getTableLocator()->get('Contato', $config);
+        $config = $this->getTableLocator()->exists('Empresa') ? [] : ['className' => EmpresaTable::class];
+        $this->Empresa = $this->getTableLocator()->get('Empresa', $config);
     }
 
     /**
@@ -48,7 +47,7 @@ class ContatoTableTest extends TestCase
      */
     public function tearDown(): void
     {
-        unset($this->Contato);
+        unset($this->Empresa);
 
         parent::tearDown();
     }
@@ -59,16 +58,6 @@ class ContatoTableTest extends TestCase
      * @return void
      */
     public function testValidationDefault(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
-
-    /**
-     * Test buildRules method
-     *
-     * @return void
-     */
-    public function testBuildRules(): void
     {
         $this->markTestIncomplete('Not implemented yet.');
     }

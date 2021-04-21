@@ -69,8 +69,9 @@ class ContatoClienteTable extends Table
             ->allowEmptyDateTime('data_modificacao');
 
         $validator
-            ->boolean('ativo')
-            ->notEmptyString('ativo');
+            ->integer('codigo_contato')
+            ->requirePresence('codigo_contato', 'create')
+            ->notEmptyString('codigo_contato');
 
         $validator
             ->integer('codigo_cliente')
@@ -78,9 +79,8 @@ class ContatoClienteTable extends Table
             ->notEmptyString('codigo_cliente');
 
         $validator
-            ->integer('codigo_contato')
-            ->requirePresence('codigo_contato', 'create')
-            ->notEmptyString('codigo_contato');
+            ->boolean('ativo')
+            ->notEmptyString('ativo');
 
         return $validator;
     }

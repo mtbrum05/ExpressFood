@@ -4,19 +4,21 @@ declare(strict_types=1);
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
- * ContatoCliente Entity
+ * Usuario Entity
  *
  * @property int $codigo
- * @property string $descricao
+ * @property string $email
+ * @property string $login
+ * @property string $senha
+ * @property bool $tipo_usuario
+ * @property string|null $foto
  * @property \Cake\I18n\FrozenTime $data_criacao
  * @property \Cake\I18n\FrozenTime|null $data_modificacao
- * @property int $codigo_contato
- * @property int $codigo_cliente
- * @property bool $ativo
  */
-class ContatoCliente extends Entity
+class Usuario extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -28,11 +30,19 @@ class ContatoCliente extends Entity
      * @var array
      */
     protected $_accessible = [
-        'descricao' => true,
+        'email' => true,
+        'login' => true,
+        'senha' => true,
+        'tipo_usuario' => true,
+        'foto' => true,
         'data_criacao' => true,
         'data_modificacao' => true,
-        'codigo_contato' => true,
-        'codigo_cliente' => true,
-        'ativo' => true,
     ];
+
+    protected function _setSenha($password)
+    {
+        if (strlen($password) > 0) {
+          return (new DefaultPasswordHasher)->hash($password);
+        }
+    }
 }

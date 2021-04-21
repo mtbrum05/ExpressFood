@@ -3,20 +3,20 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
 
-use App\Model\Table\ContatoTable;
+use App\Model\Table\UsuarioTable;
 use Cake\TestSuite\TestCase;
 
 /**
- * App\Model\Table\ContatoTable Test Case
+ * App\Model\Table\UsuarioTable Test Case
  */
-class ContatoTableTest extends TestCase
+class UsuarioTableTest extends TestCase
 {
     /**
      * Test subject
      *
-     * @var \App\Model\Table\ContatoTable
+     * @var \App\Model\Table\UsuarioTable
      */
-    protected $Contato;
+    protected $Usuario;
 
     /**
      * Fixtures
@@ -24,9 +24,7 @@ class ContatoTableTest extends TestCase
      * @var array
      */
     protected $fixtures = [
-        'app.Contato',
-        'app.Cliente',
-        'app.Empresa',
+        'app.Usuario',
     ];
 
     /**
@@ -37,8 +35,8 @@ class ContatoTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = $this->getTableLocator()->exists('Contato') ? [] : ['className' => ContatoTable::class];
-        $this->Contato = $this->getTableLocator()->get('Contato', $config);
+        $config = $this->getTableLocator()->exists('Usuario') ? [] : ['className' => UsuarioTable::class];
+        $this->Usuario = $this->getTableLocator()->get('Usuario', $config);
     }
 
     /**
@@ -48,7 +46,7 @@ class ContatoTableTest extends TestCase
      */
     public function tearDown(): void
     {
-        unset($this->Contato);
+        unset($this->Usuario);
 
         parent::tearDown();
     }
