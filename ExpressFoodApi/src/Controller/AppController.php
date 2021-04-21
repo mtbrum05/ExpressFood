@@ -65,7 +65,6 @@ class AppController extends Controller
                      'queryDatasource' => false,
                      'fields' => [
                          'username' => 'email',
-                         'password' => 'senha'
                      ],
                  ],
              ],

@@ -93,7 +93,8 @@ class JwtAuthenticate extends BaseAuthenticate
             'prefix' => 'bearer',
             'parameter' => 'token',
             'queryDatasource' => true,
-            'fields' => ['username' => 'id'],
+            'fields' => [ 'username' => 'email',
+                            'password' => 'senha'],
             'unauthenticatedException' => UnauthorizedException::class,
             'key' => null,
         ];

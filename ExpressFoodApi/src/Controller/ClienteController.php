@@ -15,39 +15,6 @@ use Cake\Http\Exception\BadRequestException;
 class ClienteController extends AppController
 {
 
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->Auth->allow('login');
-    }
-
-    public function login(): void
-     {
-        if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if (!$user) {
-               $this->response = $this->response->withStatus(400);
-                $message[] = 'Usuário ou senha inválidos';
-                $this->set(compact('message'));
-                $this->set('_serialize', ['message']);
-                return;
-            }
-          $this->Auth->setUser($user);
-          $this->set([
-                    'success' => true,
-                    'data' => [
-                        'token' => $token = \Firebase\JWT\JWT::encode([
-                            'nome' => $user['nome'],
-                            'sobrenome' => $user['sobrenome'],
-                            'email' => $user['email'],
-                            'exp' => time() + 3600,
-                                ], Security::getSalt()),
-                    ],
-                    '_serialize' => ['success', 'data'],
-         ]);
-        }
-    }
-
 
     public function add()
     {
