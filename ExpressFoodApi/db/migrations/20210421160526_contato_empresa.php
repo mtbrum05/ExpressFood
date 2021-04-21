@@ -1,8 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 use Phinx\Migration\AbstractMigration;
 
-class ContatoCliente extends AbstractMigration
+final class ContatoEmpresa extends AbstractMigration
 {
     /**
      * Change Method.
@@ -10,28 +12,14 @@ class ContatoCliente extends AbstractMigration
      * Write your reversible migrations using this method.
      *
      * More information on writing migrations is available here:
-     * https://book.cakephp.org/phinx/0/en/migrations.html
-     *
-     * The following commands can be used in this method and Phinx will
-     * automatically reverse them when rolling back:
-     *
-     *    createTable
-     *    renameTable
-     *    addColumn
-     *    addCustomColumn
-     *    renameColumn
-     *    addIndex
-     *    addForeignKey
-     *
-     * Any other destructive changes will result in an error when trying to
-     * rollback the migration.
+     * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
      *
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change(): void
     {
-        $table = $this->table('contato_cliente', ['id' => 'codigo']);
+        $table = $this->table('contato_empresa', ['id' => 'codigo']);
         $table->addColumn('descricao', 'string', [
             'default' => null,
             'limit' => 15,
@@ -48,7 +36,7 @@ class ContatoCliente extends AbstractMigration
         $table->addColumn('codigo_contato', 'integer', [
             'null' => false,
         ]);
-        $table->addColumn('codigo_cliente', 'integer', [
+        $table->addColumn('codigo_empresa', 'integer', [
             'null' => false,
         ]);
         $table->addColumn('ativo', 'boolean', [
@@ -57,15 +45,14 @@ class ContatoCliente extends AbstractMigration
             'null' => false,
         ]);
         $table->addForeignKey(
-            'codigo_cliente',
-            'cliente',
+            'codigo_empresa',
+            'empresa',
             ['codigo']
         );
         $table->addForeignKey(
             'codigo_contato',
             'contato',
-            ['codigo'],
-            ['constraint'=>'codigo_usuario_fk']
+            ['codigo']
         );
 
         $table->create();

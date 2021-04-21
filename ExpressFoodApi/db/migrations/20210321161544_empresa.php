@@ -1,8 +1,9 @@
 <?php
+declare(strict_types=1);
 
 use Phinx\Migration\AbstractMigration;
 
-class Cliente extends AbstractMigration
+final class Empresa extends AbstractMigration
 {
     /**
      * Change Method.
@@ -10,34 +11,20 @@ class Cliente extends AbstractMigration
      * Write your reversible migrations using this method.
      *
      * More information on writing migrations is available here:
-     * https://book.cakephp.org/phinx/0/en/migrations.html
-     *
-     * The following commands can be used in this method and Phinx will
-     * automatically reverse them when rolling back:
-     *
-     *    createTable
-     *    renameTable
-     *    addColumn
-     *    addCustomColumn
-     *    renameColumn
-     *    addIndex
-     *    addForeignKey
-     *
-     * Any other destructive changes will result in an error when trying to
-     * rollback the migration.
+     * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
      *
      * Remember to call "create()" or "update()" and NOT "save()" when working
      * with the Table class.
      */
-    public function change()
+    public function change() : void
     {   
-        $table = $this->table('cliente', ['id' => 'codigo']);
-        $table->addColumn('nome', 'string', [
+        $table = $this->table('empresa', ['id' => 'codigo']);
+        $table->addColumn('razao_social', 'string', [
             'default' => null,
             'limit' => 100,
             'null' => false,
         ]);
-        $table->addColumn('sobrenome', 'string', [
+        $table->addColumn('nome_fantasia', 'string', [
             'default' => null,
             'limit' => 100,
             'null' => false,
@@ -50,16 +37,11 @@ class Cliente extends AbstractMigration
             'default' => 'CURRENT_TIMESTAMP',
             'null' => true,
         ]);
-        $table->addColumn('sexo', 'char', [
-            'limit' => 1,
+        $table->addColumn('cnpj', 'string', [
             'default' => null,
+            'limit' => 14,
             'null' => false,
         ]);
-        $table->addColumn('cpf', 'string', [
-            'default' => null,
-            'limit' => 11,
-            'null' => false,
-        ]);       
         $table->addColumn('ativo', 'boolean', [
             'signed' => true,
             'default' => true,
@@ -71,9 +53,6 @@ class Cliente extends AbstractMigration
             'usuario',
             ['codigo']
         );
-       
         $table->create();
-
-
     }
 }

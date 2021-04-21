@@ -26,6 +26,11 @@ class ContatoControllerTest extends TestCase
         'app.ContatoCliente',
     ];
 
+    public function setUp() : void
+    {
+        $this->login();
+    }
+
     private function login()
     {
         $data = [
@@ -50,8 +55,6 @@ class ContatoControllerTest extends TestCase
      */
     public function testIndexRetornoSucesso() : void
     {
-        $this->login();
-
         $this->get('contato');
         $retorno = json_decode($this->_response->getBody(), true);
 
@@ -63,8 +66,6 @@ class ContatoControllerTest extends TestCase
 
     public function testIndexRetornoSucessoFiltroDescricao() : void
     {
-        $this->login();
-
         $this->get('contato?descricao=outros');
         $retorno = json_decode($this->_response->getBody(), true);
 
@@ -77,8 +78,6 @@ class ContatoControllerTest extends TestCase
 
     public function testIndexRetornoSucessoFiltroAtivo()
     {
-        $this->login();
-
         $this->get('contato?ativo=1');
         $retorno = json_decode($this->_response->getBody(), true);
 
@@ -90,8 +89,6 @@ class ContatoControllerTest extends TestCase
 
     public function testViewSucesso()
     {
-        $this->login();
-
         $this->get('contato/1');
         $retorno = json_decode($this->_response->getBody(), true);
         $esperado = [
@@ -111,8 +108,6 @@ class ContatoControllerTest extends TestCase
 
     public function testViewNotFound()
     {
-        $this->login();
-
         $this->get('contato/999');
         $retorno = json_decode($this->_response->getBody(), true);
         $esperado = [
@@ -132,8 +127,6 @@ class ContatoControllerTest extends TestCase
 
     public function testAddSucesso()
     {
-        $this->login();
-
         $data = [
             'descricao' => 'testAdd',
             'data_criacao' => '2021-04-06 01:52:43',
@@ -166,8 +159,6 @@ class ContatoControllerTest extends TestCase
 
     public function testAddDescricaoUnica()
     {
-        $this->login();
-
         //Adicionando outro contato com a mesma descrição do código 1
         $data = [
             'descricao' => 'Telefone',
@@ -199,8 +190,6 @@ class ContatoControllerTest extends TestCase
 
     public function testEditSucesso()
     {
-        $this->login();
-
         $data = [
             'descricao' => 'test Editado',
             'data_criacao' => '2021-04-06 01:52:43',
@@ -233,8 +222,6 @@ class ContatoControllerTest extends TestCase
 
     public function testEditContatoNaoencontrado()
     {
-        $this->login();
-
         $data = [
             'descricao' => 'test editado não encontrado',
             'data_criacao' => '2021-04-06 01:52:43',
@@ -263,8 +250,6 @@ class ContatoControllerTest extends TestCase
 
     public function testEditDescricaoUnica()
     {
-        $this->login();
-
         //Registro 2 tentando ter a mesma descricao do registro 1
         $data = [
             'descricao' => 'Telefone',
@@ -297,8 +282,6 @@ class ContatoControllerTest extends TestCase
     //Executar os testes de delete sempre por ultimo na esteira
     public function testDeleteSucesso()
     {
-        $this->login();
-
         $this->delete('contato/2');
         $retorno = json_decode($this->_response->getBody(), true);
 
@@ -317,8 +300,6 @@ class ContatoControllerTest extends TestCase
 
     public function testDeleteContatoNaoEncontrado()
     {
-        $this->login();
-
         $this->delete('contato/999');
         $retorno = json_decode($this->_response->getBody(), true);
 

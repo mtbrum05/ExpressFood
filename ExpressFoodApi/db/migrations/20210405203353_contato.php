@@ -32,11 +32,14 @@ class Contato extends AbstractMigration
     public function change()
     {
         $table = $this->table('contato', ['id' => 'codigo']);
+        
         $table->addColumn('descricao', 'string', [
             'default' => null,
             'limit' => 100,
             'null' => false,
         ]);
+        $table->addIndex(['descricao'], ['unique' => true]);
+        
         $table->addColumn('data_criacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',
             'null' => false,
