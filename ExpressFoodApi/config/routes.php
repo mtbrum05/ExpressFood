@@ -10,7 +10,7 @@ $routes->setRouteClass(DashedRoute::class);
 
 $routes->scope('/', function (RouteBuilder $builder) {   
 
-    $builder->connect('login',['controller' => 'Cliente','action' => 'login']);
+    $builder->post('login',['controller' => 'Cliente','action' => 'login']);
     $builder->resources('Contato', ['path' => 'contato']);  
     $builder->resources('Cliente', ['path' => 'cliente']);   
     $builder->connect('/', ['controller' => 'Swagger', 'action' => 'index', 'plugin' => 'SwaggerCustom']);

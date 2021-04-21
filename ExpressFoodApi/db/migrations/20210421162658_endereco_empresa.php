@@ -27,6 +27,11 @@ final class EnderecoEmpresa extends AbstractMigration
         $table->addColumn('numero', 'integer', [
             'null' => false,
         ]);
+        $table->addColumn('cep', 'string', [
+            'default' => null,
+            'limit' => 10,
+            'null' => false,
+        ]);
         $table->addColumn('bairro', 'string', [
             'default' => null,
             'limit' => 100,
