@@ -55,12 +55,12 @@ class ClienteFixture extends TestFixture
         $this->records = [
             [
                 'codigo' => 1,
-                'nome' => 'Lorem ipsum dolor sit amet',
-                'sobrenome' => 'Lorem ipsum dolor sit amet',
+                'nome' => 'teste',
+                'sobrenome' => 'phpunit',
                 'data_criacao' => 1619032229,
                 'data_modificacao' => 1619032229,
-                'sexo' => '',
-                'cpf' => 'Lorem ips',
+                'sexo' => 'F',
+                'cpf' => '12345678912',
                 'ativo' => 1,
                 'codigo_usuario' => 1,
             ],

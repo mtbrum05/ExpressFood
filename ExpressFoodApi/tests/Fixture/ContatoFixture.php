@@ -48,10 +48,18 @@ class ContatoFixture extends TestFixture
         $this->records = [
             [
                 'codigo' => 1,
-                'descricao' => 'Lorem ipsum dolor sit amet',
-                'data_criacao' => 1619032174,
-                'data_modificacao' => 1619032174,
+                'descricao' => 'Telefone',
+                'data_criacao' => date('Y-m-d H:i:s'),
+                'data_modificacao' => date('Y-m-d H:i:s'),
                 'ativo' => 1,
+            ],
+            //registro criado para os testes de delete
+            [
+                'codigo' => 2,
+                'descricao' => 'Outros',
+                'data_criacao' => date('Y-m-d H:i:s'),
+                'data_modificacao' => date('Y-m-d H:i:s'),
+                'ativo' => 0,
             ],
         ];
         parent::init();

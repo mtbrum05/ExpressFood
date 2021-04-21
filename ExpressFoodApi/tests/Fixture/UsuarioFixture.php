@@ -51,11 +51,11 @@ class UsuarioFixture extends TestFixture
         $this->records = [
             [
                 'codigo' => 1,
-                'email' => 'Lorem ipsum dolor sit amet',
-                'login' => 'Lorem ipsum dolor ',
-                'senha' => 'Lorem ipsum dolor sit amet',
-                'tipo_usuario' => 1,
-                'foto' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+                'email' => 'phpunit@phpunit.com.br',
+                'login' => 'phpunit',
+                'senha' => password_hash('123456',PASSWORD_DEFAULT),
+                'tipo_usuario' => 0,
+                'foto' => null,
                 'data_criacao' => 1619032245,
                 'data_modificacao' => 1619032245,
             ],
