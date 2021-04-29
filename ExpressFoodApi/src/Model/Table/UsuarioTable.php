@@ -73,7 +73,7 @@ class UsuarioTable extends Table
             ->notEmptyString('senha');
 
         $validator
-            ->boolean('tipo_usuario')
+            ->integer('tipo_usuario')
             ->requirePresence('tipo_usuario', 'create')
             ->notEmptyString('tipo_usuario');
 

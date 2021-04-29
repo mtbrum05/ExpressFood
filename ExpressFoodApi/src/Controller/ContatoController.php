@@ -15,6 +15,11 @@ use Cake\Http\Exception\BadRequestException;
  */
 class ContatoController extends AppController
 {
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Paginador');
+    }
     public function index()
     {
         try {
@@ -28,19 +33,10 @@ class ContatoController extends AppController
             
             if(!empty($queryString['descricao'])){
                 $this->paginate['conditions']['descricao LIKE'] = '%'.$queryString['descricao'].'%';          
-            } 
-            
-
-            if(isset($queryString['ativo']) && is_numeric($queryString['ativo'])){
-                if(in_array($queryString['ativo'],array(0,1))){
-                    $this->paginate['conditions']['ativo'] = $queryString['ativo'];          
-                }else{
-                    $message = 'Ativo deve receber (1)true ou (0)false.';
-                    throw new BadRequestException($message);
-                }
-            } else if(isset($queryString['ativo']) && !is_numeric($queryString['ativo'])){
-                $message = 'Ativo deve receber (1)true ou (0)false.';
-                throw new BadRequestException($message);
+            }      
+            if(isset($queryString['ativo'])){
+                $ativo = $this->Paginador->validadorAtivo($queryString['ativo']);
+                $this->paginate['conditions']['ativo'] = $ativo;
             }
 
             $contato = $this->paginate($this->Contato->find());
@@ -51,6 +47,7 @@ class ContatoController extends AppController
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
+            
         } catch (BadRequestException $e) {
             return $this->ErrorHandler->errorHandlerMessage($e, 400);
         } catch (NotFoundException $e) { 

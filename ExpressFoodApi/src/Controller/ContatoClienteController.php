@@ -15,6 +15,13 @@ use League\Container\Exception\NotFoundException;
  */
 class ContatoClienteController extends AppController
 {
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Paginador');
+    }
+
     public function index()
     {
         try {
@@ -30,28 +37,18 @@ class ContatoClienteController extends AppController
             if($authUser['tipo_usuario'] != 2){
                 $this->paginate['conditions']['codigo_cliente'] = $authUser['codigo'];
             }
-
             if(!empty($queryString['descricao'])){
                 $this->paginate['conditions']['descricao LIKE'] = '%'.$queryString['descricao'].'%';          
             } 
             if(!empty($queryString['codigo_cliente'])){
                 $this->paginate['conditions']['codigo_cliente'] = $queryString['codigo_cliente'];          
             } 
-
-            if(isset($queryString['ativo']) && is_numeric($queryString['ativo'])){
-                if(in_array($queryString['ativo'],array(0,1))){
-                    $this->paginate['conditions']['ativo'] = $queryString['ativo'];          
-                }else{
-                    $message = 'Ativo deve receber (1)true ou (0)false.';
-                    throw new BadRequestException($message);
-                }
-            } else if(isset($queryString['ativo']) && !is_numeric($queryString['ativo'])){
-                $message = 'Ativo deve receber (1)true ou (0)false.';
-                throw new BadRequestException($message);
+            if(isset($queryString['ativo'])){
+                $ativo = $this->Paginador->validadorAtivo($queryString['ativo']);
+                $this->paginate['conditions']['ativo'] = $ativo;
             }
             
-            $contatoCliente = $this->paginate($this->ContatoCliente->find()
-            );
+            $contatoCliente = $this->paginate($this->ContatoCliente->find());
 
             $this->set([
                 'data' => [
@@ -73,12 +70,7 @@ class ContatoClienteController extends AppController
         try {
             $authUser = $this->Auth->User();
 
-            $conditions = null;
-            if($authUser['tipo_usuario'] != 2){
-                $conditions = [
-                    'codigo_cliente' => $authUser['codigo']
-                ];
-            }
+            $conditions = $this->Paginador->validadorTipoUsuario($authUser);
 
             $contatoCliente = $this->ContatoCliente->findByCodigo($id)
                                                    ->where($conditions)
