@@ -36,6 +36,7 @@ class UsuarioController extends AppController
                     'data' => [
                         'token' => $token = \Firebase\JWT\JWT::encode([
                             'codigo' => $user['codigo'],
+                            'tipo_usuario' => $user['tipo_usuario'],
                             'login' => $user['login'],
                             'email' => $user['email'],
                             'exp' => time() + 3600,

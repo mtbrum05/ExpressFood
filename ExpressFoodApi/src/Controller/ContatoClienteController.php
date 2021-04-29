@@ -1,35 +1,42 @@
 <?php
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Exception;
-use App\Controller\AppController;
-use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\BadRequestException;
+use League\Container\Exception\NotFoundException;
 
 /**
- * Contato Controller
+ * ContatoCliente Controller
  *
- * @property \App\Model\Table\ContatoTable $Contato
- *
- * @method \App\Model\Entity\Contato[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @property \App\Model\Table\ContatoClienteTable $ContatoCliente
+ * @method \App\Model\Entity\ContatoCliente[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class ContatoController extends AppController
+class ContatoClienteController extends AppController
 {
     public function index()
     {
         try {
 
             $this->paginate = array(
-                'limit' => 20,
+                'limit' => 10,
                 'conditions' => array(),
             );
 
             $queryString = $this->getRequest()->getQueryParams();
-            
+            $authUser = $this->Auth->User();
+
+            if($authUser['tipo_usuario'] != 2){
+                $this->paginate['conditions']['codigo_cliente'] = $authUser['codigo'];
+            }
+
             if(!empty($queryString['descricao'])){
                 $this->paginate['conditions']['descricao LIKE'] = '%'.$queryString['descricao'].'%';          
             } 
-            
+            if(!empty($queryString['codigo_cliente'])){
+                $this->paginate['conditions']['codigo_cliente'] = $queryString['codigo_cliente'];          
+            } 
 
             if(isset($queryString['ativo']) && is_numeric($queryString['ativo'])){
                 if(in_array($queryString['ativo'],array(0,1))){
@@ -42,12 +49,13 @@ class ContatoController extends AppController
                 $message = 'Ativo deve receber (1)true ou (0)false.';
                 throw new BadRequestException($message);
             }
-
-            $contato = $this->paginate($this->Contato->find());
+            
+            $contatoCliente = $this->paginate($this->ContatoCliente->find()
+            );
 
             $this->set([
                 'data' => [
-                    'contato' => $contato,
+                    'contatoCliente' => $contatoCliente,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -62,17 +70,28 @@ class ContatoController extends AppController
 
     public function view($id = null)
     {
-
         try {
-            $contato = $this->Contato->findByCodigo($id)->first();
-            if(!$contato){
-                $dados = ['contato' => ['_error' => 'Registro não encontrado.']];
+            $authUser = $this->Auth->User();
+
+            $conditions = null;
+            if($authUser['tipo_usuario'] != 2){
+                $conditions = [
+                    'codigo_cliente' => $authUser['codigo']
+                ];
+            }
+
+            $contatoCliente = $this->ContatoCliente->findByCodigo($id)
+                                                   ->where($conditions)
+                                                   ->first();
+
+            if(!$contatoCliente){
+                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
 
             $this->set([
                 'data' => [
-                    'contato' => $contato,
+                    'contatoCliente' => $contatoCliente,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -84,29 +103,30 @@ class ContatoController extends AppController
         }
     }
 
+
     public function add()
     {
-
-
-        $data = $this->request->getData();
-
+        
         try {
 
+            $data = $this->request->getData();
+
             if ($this->request->is('post')) {
-                $contato = $this->Contato->newEmptyEntity();
-                $contato = $this->Contato->patchEntity($contato, $data);
+                $contatoCliente = $this->ContatoCliente->newEmptyEntity();
+                $contatoCliente = $this->ContatoCliente->patchEntity($contatoCliente, $data);
                 
-                if ($this->Contato->save($contato)) {
+                if ($this->ContatoCliente->save($contatoCliente)) {
                     $message = 'Salvo com sucesso!';
                 } else {
-                    $message = ['contato' => $contato->getErrors()];
+                    $message = ['contatoCliente' => $contatoCliente->getErrors()];
                     throw new BadRequestException(json_encode($message));
                 }
             }
+
             $this->set([
                 'data' => [
                     'message' => $message,
-                    'contato' => $contato,
+                    'contatoCliente' => $contatoCliente,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -123,24 +143,24 @@ class ContatoController extends AppController
         $data = $this->request->getData();
 
         try {
-            $contato = $this->Contato->findByCodigo($id)->first();
-            if(!$contato){
-                $dados = ['contato' => ['_error' => 'Registro não encontrado.']];
+            $contatoCliente = $this->ContatoCliente->findByCodigo($id)->first();
+            if(!$contatoCliente){
+                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
             if ($this->request->is(['put'])) {
-                $contato = $this->Contato->patchEntity($contato, $data);
-                if ($this->Contato->save($contato)) {
+                $contatoCliente = $this->ContatoCliente->patchEntity($contatoCliente, $data);
+                if ($this->ContatoCliente->save($contatoCliente)) {
                     $message = 'Editado com sucesso!';
                 } else {
-                    $message = ['contato' => $contato->getErrors()];
+                    $message = ['contatoCliente' => $contatoCliente->getErrors()];
                     throw new BadRequestException(json_encode($message));
                 }
             }
             $this->set([
                 'data' => [
                     'message' => $message,
-                    'contato' => $contato,
+                    'contatoCliente' => $contatoCliente,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -157,17 +177,17 @@ class ContatoController extends AppController
     {
         try {
 
-            $contato = $this->Contato->findByCodigo($id)->first();
+            $contatoCliente = $this->ContatoCliente->findByCodigo($id)->first();
             
-            if(!$contato){
-                $dados = ['contato' => ['_error' => 'Registro não encontrado.']];
+            if(!$contatoCliente){
+                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
             
-            if ($this->Contato->delete($contato)) {
+            if ($this->ContatoCliente->delete($contatoCliente)) {
                 $message = 'Deletado com sucesso!';
             } else {
-                $message = $contato->getErrors();
+                $message = $contatoCliente->getErrors();
             }
             $this->set([
                 'data' => [
@@ -186,6 +206,5 @@ class ContatoController extends AppController
         }
     }
 
-
-    
+  
 }

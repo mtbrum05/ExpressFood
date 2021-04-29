@@ -36,7 +36,7 @@ final class Usuario extends AbstractMigration
             'limit' => 100,
             'null' => false,
         ]);
-        $table->addColumn('tipo_usuario', 'boolean', [
+        $table->addColumn('tipo_usuario', 'integer', [
             'null' => false,
         ]);
         $table->addColumn('foto', 'text', [
