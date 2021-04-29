@@ -44,6 +44,13 @@ class UsuarioSeeder extends AbstractSeed
                 'tipo_usuario'  => 1,       
                 'foto'          => null
             ],
+            [
+                'email'         => 'admin@admin.com',
+                'login'         => 'admin05',
+                'senha'         => password_hash('admin1',PASSWORD_DEFAULT),
+                'tipo_usuario'  => 2,       
+                'foto'          => null
+            ],
         ];
 
         $usuario = $this->table('usuario');

@@ -43,6 +43,7 @@ class ContatoController extends AppController
             }
 
             $contato = $this->paginate($this->Contato->find());
+
             $this->set([
                 'data' => [
                     'contato' => $contato,
@@ -50,16 +51,9 @@ class ContatoController extends AppController
             ]);
             $this->viewBuilder()->setOption('serialize', true);
         } catch (BadRequestException $e) { //400
-
-            $dados = [
-                "data"      => null,
-                "message" => $e->getMessage()
-            ];
-
-            return $this->response
-                ->withStatus(400)
-                ->withType('application/json')
-                ->withStringBody(json_encode($dados));
+            return $this->ErrorHandler->errorHandler($e, 400);
+        } catch (NotFoundException $e) { //400
+            return $this->ErrorHandler->errorHandler($e, 404);
         } catch (Exception $e) {
             return $this->ErrorHandler->errorHandler($e, 500);
         }

@@ -33,7 +33,7 @@ class ErrorHandlerComponent extends Component
     public function errorHandler($e, $error_code = 500) {
         $dados = [
             "data" => null,
-            "message" => json_decode($e->getMessage(), true)
+            "message" => $e->getMessage()
         ];
         return $this->_controller->getResponse()
                     ->withStatus($error_code)
