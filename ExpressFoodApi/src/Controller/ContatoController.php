@@ -50,10 +50,10 @@ class ContatoController extends AppController
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
-        } catch (BadRequestException $e) { //400
-            return $this->ErrorHandler->errorHandler($e, 400);
-        } catch (NotFoundException $e) { //400
-            return $this->ErrorHandler->errorHandler($e, 404);
+        } catch (BadRequestException $e) {
+            return $this->ErrorHandler->errorHandlerMessage($e, 400);
+        } catch (NotFoundException $e) { 
+            return $this->ErrorHandler->errorHandlerMessage($e, 404);
         } catch (Exception $e) {
             return $this->ErrorHandler->errorHandler($e, 500);
         }
@@ -111,15 +111,7 @@ class ContatoController extends AppController
             $this->viewBuilder()->setOption('serialize', true);
 
         } catch (BadRequestException $e) { //400
-            $dados = [
-                "data"      => null,
-                "message" => json_decode($e->getMessage(), true)
-            ];
-
-            return $this->response
-                ->withStatus(400)
-                ->withType('application/json')
-                ->withStringBody(json_encode($dados));
+            return $this->ErrorHandler->errorHandler($e, 400);
         } catch (Exception $e) {
             return $this->ErrorHandler->errorHandler($e, 500);
         }
@@ -151,16 +143,8 @@ class ContatoController extends AppController
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
-        } catch (BadRequestException $e) { //400
-            $dados = [
-                "data"      => null,
-                "message" => json_decode($e->getMessage(), true)
-            ];
-
-            return $this->response
-                ->withStatus(400)
-                ->withType('application/json')
-                ->withStringBody(json_encode($dados));
+        } catch (BadRequestException $e) {
+            return $this->ErrorHandler->errorHandler($e, 400);
         } catch (NotFoundException $e) {
             return $this->ErrorHandler->errorHandler($e, 404);
         } catch (Exception $e) {
