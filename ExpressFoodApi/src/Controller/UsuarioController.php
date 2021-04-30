@@ -23,6 +23,9 @@ class UsuarioController extends AppController
      {
         if ($this->request->is('post')) {
             $user = $this->Auth->identify();
+            $extraUser = $this->Usuario->findByCodigo($user['codigo'])
+                        ->contain(['Empresa','Cliente'])
+                        ->first();
             if (!$user) {
                $this->response = $this->response->withStatus(400);
                 $message[] = 'Usuário ou senha inválidos';
@@ -30,18 +33,44 @@ class UsuarioController extends AppController
                 $this->set('_serialize', ['message']);
                 return;
             }
+
+            if($extraUser->cliente['codigo']){
+                $data = [
+                    'token' => $token = \Firebase\JWT\JWT::encode([
+                        'codigo' => $user['codigo'],
+                        'tipo_usuario' => $user['tipo_usuario'],
+                        'login' => $user['login'],
+                        'email' => $user['email'],
+                        'codigo_cliente' => $extraUser->cliente['codigo'] ? $extraUser->cliente['codigo'] : null,
+                        'exp' => time() + 3600,
+                            ], Security::getSalt()),
+                        ];      
+            }else if($extraUser->empresa['codigo']){
+                $data = [
+                    'token' => $token = \Firebase\JWT\JWT::encode([
+                        'codigo' => $user['codigo'],
+                        'tipo_usuario' => $user['tipo_usuario'],
+                        'login' => $user['login'],
+                        'email' => $user['email'],
+                        'codigo_empresa' => $extraUser->empresa['codigo'] ? $extraUser->empresa['codigo'] : null,
+                        'exp' => time() + 3600,
+                            ], Security::getSalt()),
+                        ];      
+            } else {
+                $data = [
+                    'token' => $token = \Firebase\JWT\JWT::encode([
+                        'codigo' => $user['codigo'],
+                        'tipo_usuario' => $user['tipo_usuario'],
+                        'login' => $user['login'],
+                        'email' => $user['email'],
+                        'exp' => time() + 3600,
+                            ], Security::getSalt()),
+                        ];      
+            }
           $this->Auth->setUser($user);
           $this->set([
                     'success' => true,
-                    'data' => [
-                        'token' => $token = \Firebase\JWT\JWT::encode([
-                            'codigo' => $user['codigo'],
-                            'tipo_usuario' => $user['tipo_usuario'],
-                            'login' => $user['login'],
-                            'email' => $user['email'],
-                            'exp' => time() + 3600,
-                                ], Security::getSalt()),
-                    ],
+                    'data' => $data,
                     '_serialize' => ['success', 'data'],
          ]);
         }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -40,6 +41,18 @@ class UsuarioTable extends Table
         $this->setTable('usuario');
         $this->setDisplayField('codigo');
         $this->setPrimaryKey('codigo');
+
+        $this->hasOne('Cliente', [
+            'foreignKey' => FALSE,
+            'conditions' => ['Usuario.codigo = Cliente.codigo_usuario'],
+            'joinType' => 'LEFT'
+        ]);
+
+        $this->hasOne('Empresa', [
+            'foreignKey' => FALSE,
+            'conditions' => ['Usuario.codigo = Empresa.codigo_usuario'],
+            'joinType' => 'LEFT'
+        ]);
     }
 
     /**

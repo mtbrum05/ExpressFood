@@ -21,14 +21,31 @@ class PaginadorComponent extends Component
             $message = 'Ativo deve receber (1)true ou (0)false.';
             throw new BadRequestException($message);
         }
-    }
-
-    public function validadorTipoUsuario($dados)
+    }   
+    public function validadorTipoUsuarioCliente($dados)
     {
         if($dados['tipo_usuario'] != 2){
-            return [
-                'codigo_cliente' => $dados['codigo']
-            ];
+            if(isset($dados['codigo_cliente'])){
+                return [
+                    'codigo_cliente' => $dados['codigo_cliente']
+                ];
+            } else {
+                return null;
+            }
+        }else {
+            return null;
+        }
+    }
+    public function validadorTipoUsuarioEmpresa($dados)
+    {
+        if($dados['tipo_usuario'] != 2){
+            if(isset($dados['codigo_empresa'])){
+                return [
+                    'codigo_empresa' => $dados['codigo_empresa']
+                ];
+            } else {
+                return null;
+            }
         }else {
             return null;
         }

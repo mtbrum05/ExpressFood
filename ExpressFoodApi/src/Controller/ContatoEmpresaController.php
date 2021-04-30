@@ -4,18 +4,17 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Exception;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\BadRequestException;
-use League\Container\Exception\NotFoundException;
 
 /**
- * ContatoCliente Controller
+ * ContatoEmpresa Controller
  *
- * @property \App\Model\Table\ContatoClienteTable $ContatoCliente
- * @method \App\Model\Entity\ContatoCliente[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @property \App\Model\Table\ContatoEmpresaTable $ContatoEmpresa
+ * @method \App\Model\Entity\ContatoEmpresa[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class ContatoClienteController extends AppController
+class ContatoEmpresaController extends AppController
 {
-
     public function initialize(): void
     {
         parent::initialize();
@@ -35,28 +34,28 @@ class ContatoClienteController extends AppController
             $authUser = $this->Auth->User();
 
             if($authUser['tipo_usuario'] != 2){
-                if (isset($authUser['codigo_empresa'])){
+                if (isset($authUser['codigo_cliente'])){
                     $message = 'Registro disponivel apenas para Administradores';
                     throw new BadRequestException($message);
                 }
-                $this->paginate['conditions']['codigo_cliente'] = $authUser['codigo_cliente'];
+                $this->paginate['conditions']['codigo_empresa'] = $authUser['codigo_empresa'];
             }
             if(!empty($queryString['descricao'])){
                 $this->paginate['conditions']['descricao LIKE'] = '%'.$queryString['descricao'].'%';          
             } 
-            if(!empty($queryString['codigo_cliente'])){
-                $this->paginate['conditions']['codigo_cliente'] = $queryString['codigo_cliente'];          
+            if(!empty($queryString['codigo_empresa'])){
+                $this->paginate['conditions']['codigo_empresa'] = $queryString['codigo_empresa'];          
             } 
             if(isset($queryString['ativo'])){
                 $ativo = $this->Paginador->validadorAtivo($queryString['ativo']);
                 $this->paginate['conditions']['ativo'] = $ativo;
             }
             
-            $contatoCliente = $this->paginate($this->ContatoCliente->find());
+            $contatoEmpresa = $this->paginate($this->ContatoEmpresa->find());
 
             $this->set([
                 'data' => [
-                    'contatoCliente' => $contatoCliente,
+                    'contatoEmpresa' => $contatoEmpresa,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -74,20 +73,20 @@ class ContatoClienteController extends AppController
         try {
             $authUser = $this->Auth->User();
 
-            $conditions = $this->Paginador->validadorTipoUsuarioCliente($authUser);
+            $conditions = $this->Paginador->validadorTipoUsuarioEmpresa($authUser);
 
-            $contatoCliente = $this->ContatoCliente->findByCodigo($id)
+            $contatoEmpresa = $this->ContatoEmpresa->findByCodigo($id)
                                                    ->where($conditions)
                                                    ->first();
 
-            if(!$contatoCliente){
-                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
+            if(!$contatoEmpresa){
+                $dados = ['contatoEmpresa' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
 
             $this->set([
                 'data' => [
-                    'contatoCliente' => $contatoCliente,
+                    'contatoEmpresa' => $contatoEmpresa,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -108,13 +107,13 @@ class ContatoClienteController extends AppController
             $data = $this->request->getData();
 
             if ($this->request->is('post')) {
-                $contatoCliente = $this->ContatoCliente->newEmptyEntity();
-                $contatoCliente = $this->ContatoCliente->patchEntity($contatoCliente, $data);
+                $contatoEmpresa = $this->ContatoEmpresa->newEmptyEntity();
+                $contatoEmpresa = $this->ContatoEmpresa->patchEntity($contatoEmpresa, $data);
                 
-                if ($this->ContatoCliente->save($contatoCliente)) {
+                if ($this->ContatoEmpresa->save($contatoEmpresa)) {
                     $message = 'Salvo com sucesso!';
                 } else {
-                    $message = ['contatoCliente' => $contatoCliente->getErrors()];
+                    $message = ['contatoEmpresa' => $contatoEmpresa->getErrors()];
                     throw new BadRequestException(json_encode($message));
                 }
             }
@@ -122,7 +121,7 @@ class ContatoClienteController extends AppController
             $this->set([
                 'data' => [
                     'message' => $message,
-                    'contatoCliente' => $contatoCliente,
+                    'contatoEmpresa' => $contatoEmpresa,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -139,24 +138,24 @@ class ContatoClienteController extends AppController
         $data = $this->request->getData();
 
         try {
-            $contatoCliente = $this->ContatoCliente->findByCodigo($id)->first();
-            if(!$contatoCliente){
-                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
+            $contatoEmpresa = $this->ContatoEmpresa->findByCodigo($id)->first();
+            if(!$contatoEmpresa){
+                $dados = ['contatoEmpresa' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
             if ($this->request->is(['put'])) {
-                $contatoCliente = $this->ContatoCliente->patchEntity($contatoCliente, $data);
-                if ($this->ContatoCliente->save($contatoCliente)) {
+                $contatoEmpresa = $this->ContatoEmpresa->patchEntity($contatoEmpresa, $data);
+                if ($this->ContatoEmpresa->save($contatoEmpresa)) {
                     $message = 'Editado com sucesso!';
                 } else {
-                    $message = ['contatoCliente' => $contatoCliente->getErrors()];
+                    $message = ['contatoEmpresa' => $contatoEmpresa->getErrors()];
                     throw new BadRequestException(json_encode($message));
                 }
             }
             $this->set([
                 'data' => [
                     'message' => $message,
-                    'contatoCliente' => $contatoCliente,
+                    'contatoEmpresa' => $contatoEmpresa,
                 ],
             ]);
             $this->viewBuilder()->setOption('serialize', true);
@@ -173,17 +172,17 @@ class ContatoClienteController extends AppController
     {
         try {
 
-            $contatoCliente = $this->ContatoCliente->findByCodigo($id)->first();
+            $contatoEmpresa = $this->ContatoEmpresa->findByCodigo($id)->first();
             
-            if(!$contatoCliente){
-                $dados = ['contatoCliente' => ['_error' => 'Registro não encontrado.']];
+            if(!$contatoEmpresa){
+                $dados = ['contatoEmpresa' => ['_error' => 'Registro não encontrado.']];
                 throw new NotFoundException(json_encode($dados));
             }
             
-            if ($this->ContatoCliente->delete($contatoCliente)) {
+            if ($this->ContatoEmpresa->delete($contatoEmpresa)) {
                 $message = 'Deletado com sucesso!';
             } else {
-                $message = $contatoCliente->getErrors();
+                $message = $contatoEmpresa->getErrors();
             }
             $this->set([
                 'data' => [
@@ -201,6 +200,4 @@ class ContatoClienteController extends AppController
             return $this->ErrorHandler->errorHandler($e, 500);
         }
     }
-
-  
 }
