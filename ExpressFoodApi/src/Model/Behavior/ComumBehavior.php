@@ -1,28 +1,11 @@
 <?php
 
-namespace App\Controller\Component;
+namespace App\Model\Behavior;
 
-use Cake\Controller\Component;
-use Cake\Http\Exception\BadRequestException;
+use Cake\ORM\Behavior;
 
-class PaginadorComponent extends Component
+class ComumBehavior extends Behavior
 {
-
-    public function validadorAtivo($ativo)
-    {
-        if (isset($ativo) && is_numeric($ativo)) {
-            if (in_array($ativo, array(0, 1))) {
-                return $ativo;
-            } else {
-                $message = 'Ativo deve receber (1)true ou (0)false.';
-                throw new BadRequestException($message);
-            }
-        } else if (isset($ativo) && !is_numeric($ativo)) {
-            $message = 'Ativo deve receber (1)true ou (0)false.';
-            throw new BadRequestException($message);
-        }
-    }   
-
     public function validadorTipoUsuarioCliente($dados)
     {
         if($dados['tipo_usuario'] != 2){
@@ -52,5 +35,7 @@ class PaginadorComponent extends Component
             return null;
         }
     }
-
 }
+
+
+?>

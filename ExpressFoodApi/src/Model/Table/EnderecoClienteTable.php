@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Exception;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
+use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
+use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Exception\BadRequestException;
 
 /**
  * EnderecoCliente Model
@@ -113,5 +116,72 @@ class EnderecoClienteTable extends Table
             ->notEmptyString('principal');
 
         return $validator;
+    }
+    
+    
+    public function adicionarEndereco($data)
+    {
+        $conn = $this->getConnection();
+        $conn->begin();
+        $enderecoCliente = $this->newEmptyEntity();
+        $enderecoCliente = $this->patchEntity($enderecoCliente, $data);
+
+        $this->removePrincipalEnderecoAntigo($enderecoCliente);
+       
+        $retorno = array();
+
+        if ($this->save($enderecoCliente)) {
+            $message = 'Salvo com sucesso!';
+            $retorno['message'] = $message;
+            $retorno['enderecoCliente'] = $enderecoCliente;
+            $conn->commit();
+            return $retorno;
+        } else {
+            $message = ['enderecoCliente' => $enderecoCliente->getErrors()];
+            $conn->rollback();
+            throw new BadRequestException(json_encode($message));
+        }
+      
+    }
+
+    public function editarEndereco($id,$data)
+    {  
+        $conn = $this->getConnection();
+        $conn->begin();
+        $enderecoCliente = $this->findByCodigo($id)->first();
+        if(!$enderecoCliente){
+            $dados = ['enderecoCliente' => ['_error' => 'Registro não encontrado.']];
+            $conn->rollback();
+            throw new NotFoundException(json_encode($dados));
+        }
+        
+        $enderecoCliente = $this->patchEntity($enderecoCliente, $data);
+
+        $this->removePrincipalEnderecoAntigo($enderecoCliente);
+
+        $retorno = array();
+
+        if ($this->save($enderecoCliente)) {
+            $message = 'Editado com sucesso!';
+            $retorno['message'] = $message;
+            $retorno['enderecoCliente'] = $enderecoCliente;
+            $conn->commit();
+            return $retorno;
+        } else {
+            $message = ['contatoCliente' => $enderecoCliente->getErrors()];
+            $conn->rollback();
+            throw new BadRequestException(json_encode($message));
+        }
+    }
+
+    private function removePrincipalEnderecoAntigo($atual)
+    {
+        if($atual['principal'] == true ){
+            $this->query()
+                 ->update()
+                 ->set(['principal' => false])
+                 ->where(['codigo_cliente' => $atual['codigo_cliente']])
+                 ->execute();
+        }
     }
 }
