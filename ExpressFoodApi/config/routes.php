@@ -15,6 +15,7 @@ $routes->scope('/', function (RouteBuilder $builder) {
     $builder->resources('ContatoCliente', ['path' => 'contato_cliente']);   
     $builder->resources('ContatoEmpresa', ['path' => 'contato_empresa']);   
     $builder->resources('EnderecoCliente', ['path' => 'endereco_cliente']);   
+    $builder->resources('EnderecoEmpresa', ['path' => 'endereco_empresa']);   
 
     $builder->connect('/', ['controller' => 'Swagger', 'action' => 'index', 'plugin' => 'SwaggerCustom']);
 

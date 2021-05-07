@@ -168,7 +168,7 @@ class EnderecoClienteTable extends Table
             $conn->commit();
             return $retorno;
         } else {
-            $message = ['contatoCliente' => $enderecoCliente->getErrors()];
+            $message = ['enderecoCliente' => $enderecoCliente->getErrors()];
             $conn->rollback();
             throw new BadRequestException(json_encode($message));
         }

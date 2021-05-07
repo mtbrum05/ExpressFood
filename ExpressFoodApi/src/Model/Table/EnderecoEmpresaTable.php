@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\BadRequestException;
 
 /**
@@ -114,6 +115,72 @@ class EnderecoEmpresaTable extends Table
             ->notEmptyString('principal');
 
         return $validator;
+    }
+
+    public function adicionarEndereco($data)
+    {
+        $conn = $this->getConnection();
+        $conn->begin();
+        $enderecoEmpresa = $this->newEmptyEntity();
+        $enderecoEmpresa = $this->patchEntity($enderecoEmpresa, $data);
+
+        $this->removePrincipalEnderecoAntigo($enderecoEmpresa);
+       
+        $retorno = array();
+
+        if ($this->save($enderecoEmpresa)) {
+            $message = 'Salvo com sucesso!';
+            $retorno['message'] = $message;
+            $retorno['enderecoEmpresa'] = $enderecoEmpresa;
+            $conn->commit();
+            return $retorno;
+        } else {
+            $message = ['enderecoEmpresa' => $enderecoEmpresa->getErrors()];
+            $conn->rollback();
+            throw new BadRequestException(json_encode($message));
+        }
+      
+    }
+
+    public function editarEndereco($id,$data)
+    {  
+        $conn = $this->getConnection();
+        $conn->begin();
+        $enderecoEmpresa = $this->findByCodigo($id)->first();
+        if(!$enderecoEmpresa){
+            $dados = ['enderecoEmpresa' => ['_error' => 'Registro não encontrado.']];
+            $conn->rollback();
+            throw new NotFoundException(json_encode($dados));
+        }
+        
+        $enderecoEmpresa = $this->patchEntity($enderecoEmpresa, $data);
+
+        $this->removePrincipalEnderecoAntigo($enderecoEmpresa);
+
+        $retorno = array();
+
+        if ($this->save($enderecoEmpresa)) {
+            $message = 'Editado com sucesso!';
+            $retorno['message'] = $message;
+            $retorno['enderecoEmpresa'] = $enderecoEmpresa;
+            $conn->commit();
+            return $retorno;
+        } else {
+            $message = ['enderecoEmpresa' => $enderecoEmpresa->getErrors()];
+            $conn->rollback();
+            throw new BadRequestException(json_encode($message));
+        }
+    }
+
+    private function removePrincipalEnderecoAntigo($atual)
+    {
+        if($atual['principal'] == true ){
+            $this->query()
+                 ->update()
+                 ->set(['principal' => false])
+                 ->where(['codigo_empresa' => $atual['codigo_empresa']])
+                 ->execute();
+        }
     }
 
    
