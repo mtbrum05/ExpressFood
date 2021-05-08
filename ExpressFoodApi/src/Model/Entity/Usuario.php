@@ -38,6 +38,8 @@ class Usuario extends Entity
         'data_criacao' => true,
         'data_modificacao' => true,
     ];
+    
+    protected $_hidden = ['senha'];
 
     protected function _setSenha($password)
     {
