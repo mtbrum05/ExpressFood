@@ -47,7 +47,8 @@ final class ContatoEmpresa extends AbstractMigration
         $table->addForeignKey(
             'codigo_empresa',
             'empresa',
-            ['codigo']
+            ['codigo'],
+            ['delete'=> 'CASCADE']
         );
         $table->addForeignKey(
             'codigo_contato',

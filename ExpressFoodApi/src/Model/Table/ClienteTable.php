@@ -7,6 +7,7 @@ use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
+use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\BadRequestException;
 
 /**
@@ -51,9 +52,10 @@ class ClienteTable extends Table
         ]);
 
         $this->hasOne('Usuario', [
+            'dependent' => true,
+            'cascadeCallbacks' => true,
             'foreignKey' => 'codigo',
-            'joinType' => 'INNER',
-            'cascadeCallbacks' => TRUE
+            'bindingKey' => 'codigo_usuario',
         ]);
     }
 
@@ -117,11 +119,12 @@ class ClienteTable extends Table
     {
         $conn = $this->getConnection();
         $conn->begin();
+        $retorno = array();
         
         $usuario = $this->Usuario->newEmptyEntity();
         $usuario = $this->Usuario->patchEntity($usuario, $data['usuario']);
         $usuario['tipo_usuario'] = 0;
-        $retorno = array();
+
         if ($this->Usuario->save($usuario)){
 
             $cliente = $this->newEmptyEntity();
@@ -131,6 +134,50 @@ class ClienteTable extends Table
             if ($this->save($cliente)) {
                 $message = 'Salvo com sucesso!';
                 $retorno['message'] = $message;
+                $retorno['cliente'] = $cliente;
+                $retorno['usuario'] = $usuario;
+                $conn->commit();
+                return $retorno;
+            } else {
+                $message = ['cliente' => $cliente->getErrors()];
+                $conn->rollback();
+                throw new BadRequestException(json_encode($message));
+            }
+        } else {
+            $message = ['cliente' => $usuario->getErrors()];
+            $conn->rollback();
+            throw new BadRequestException(json_encode($message));
+        }
+    }
+
+    public function atualizarCliente($id,$data)
+    {
+        $conn = $this->getConnection();
+        $conn->begin();
+        $retorno = array();
+
+        $cliente = $this->findByCodigo($id)
+                                    ->contain('Usuario')
+                                    ->first();
+
+        if(!$cliente){
+            $dados = ['cliente' => ['_error' => 'Registro não encontrado.']];
+            $conn->rollback();
+            throw new NotFoundException(json_encode($dados));
+        }
+        
+        $usuario = $this->Usuario->patchEntity($cliente->usuario, $data['usuario']);
+        $usuario['tipo_usuario'] = 0;
+        
+        if ($this->Usuario->save($usuario)){
+
+            $cliente = $this->patchEntity($cliente, $data['cliente']);
+            $cliente['codigo_usuario'] =  $usuario['codigo'];
+
+            if ($this->save($cliente)) {
+                $message = 'Editado com sucesso!';
+                $retorno['message'] = $message;
+                unset($cliente->usuario);
                 $retorno['cliente'] = $cliente;
                 $retorno['usuario'] = $usuario;
                 $conn->commit();

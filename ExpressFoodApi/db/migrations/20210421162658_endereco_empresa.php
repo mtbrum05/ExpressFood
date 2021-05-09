@@ -56,7 +56,9 @@ final class EnderecoEmpresa extends AbstractMigration
         $table->addForeignKey(
             'codigo_empresa',
             'empresa',
-            ['codigo']
+            ['codigo'],
+            ['delete'=> 'CASCADE']
+
         );
         $table->addColumn('data_criacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',

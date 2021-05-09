@@ -59,13 +59,13 @@ class ContatoCliente extends AbstractMigration
         $table->addForeignKey(
             'codigo_cliente',
             'cliente',
-            ['codigo']
+            ['codigo'],
+            ['delete'=> 'CASCADE']
         );
         $table->addForeignKey(
             'codigo_contato',
             'contato',
-            ['codigo'],
-            ['constraint'=>'codigo_usuario_fk']
+            ['codigo']
         );
 
         $table->create();

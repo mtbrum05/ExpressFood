@@ -63,7 +63,6 @@ class ClienteController extends AppController
         } catch (NotFoundException $e) { 
             return $this->ErrorHandler->errorHandlerMessage($e, 404);
         } catch (Exception $e) {
-            debug($e);die;
             return $this->ErrorHandler->errorHandler($e, 500);
         }
     }
@@ -116,15 +115,72 @@ class ClienteController extends AppController
             ]);
             $this->viewBuilder()->setOption('serialize', true);
 
-        } catch (BadRequestException $e) { //400
+        } catch (BadRequestException $e) {
             return $this->ErrorHandler->errorHandler($e, 400);
         } catch (Exception $e) {
-            debug($e);die;
             return $this->ErrorHandler->errorHandler($e, 500);
         }
     }
 
+    public function edit($id = null)
+    {
+        try {
+            
+            $data = $this->request->getData();
 
+            $retorno = $this->Cliente->atualizarCliente($id,$data);
 
-    
+            $this->set([
+                'data' => [
+                    'message' => $retorno['message'],
+                    'cliente' => $retorno['cliente'],
+                    'usuario' => $retorno['usuario'],
+                ],
+            ]);
+            $this->viewBuilder()->setOption('serialize', true);
+
+        } catch (BadRequestException $e) {
+            return $this->ErrorHandler->errorHandler($e, 400);
+        } catch (NotFoundException $e) {
+            return $this->ErrorHandler->errorHandler($e, 404);
+        } catch (Exception $e) {
+            return $this->ErrorHandler->errorHandler($e, 500);
+        }
+    }
+
+    public function delete($id = null)
+    {
+        try {
+
+            $cliente = $this->Cliente->findByCodigo($id)
+                                     ->contain('Usuario')
+                                     ->first();
+            if(!$cliente){
+                $dados = ['cliente' => ['_error' => 'Registro não encontrado.']];
+                throw new NotFoundException(json_encode($dados));
+            }
+            $this->loadModel('Usuario');
+            if ($this->Usuario->delete($cliente->usuario)) {
+                $message = 'Deletado com sucesso!';
+            } else {
+                $message = $cliente->getErrors();
+            }
+            $this->set([
+                'data' => [
+                    'message' => $message,
+                ],
+            ]);
+            $this->viewBuilder()->setOption('serialize', true);
+
+        } catch (NotFoundException $e) {
+            return $this->ErrorHandler->errorHandler($e, 404);
+        } catch (Exception $e) {
+            debug($e);die;
+            if($e->getCode() == 23000){
+                return $this->ErrorHandler->errorHandlerConstraintViolation($e, 400);
+            }
+            return $this->ErrorHandler->errorHandler($e, 500);
+        }
+    }
+        
 }

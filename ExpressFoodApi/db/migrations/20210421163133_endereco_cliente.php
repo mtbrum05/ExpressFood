@@ -56,7 +56,8 @@ final class EnderecoCliente extends AbstractMigration
         $table->addForeignKey(
             'codigo_cliente',
             'cliente',
-            ['codigo']
+            ['codigo'],
+            ['delete'=> 'CASCADE']
         );
         $table->addColumn('data_criacao', 'timestamp', [
             'default' => 'CURRENT_TIMESTAMP',

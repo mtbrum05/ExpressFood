@@ -69,7 +69,8 @@ class Cliente extends AbstractMigration
         $table->addForeignKey(
             'codigo_usuario',
             'usuario',
-            ['codigo']
+            ['codigo'],
+            ['delete'=> 'CASCADE']
         );
        
         $table->create();
